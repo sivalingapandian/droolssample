@@ -1,0 +1,9 @@
+package com.medhost.mu.mureports;
+
+import java.lang.Number;
+
+rule "MUGuidedRule"
+	dialect "mvel"
+	when
+	then
+end

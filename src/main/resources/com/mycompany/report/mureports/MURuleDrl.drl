@@ -1,0 +1,33 @@
+package com.medhost.mu.mureports
+
+import com.mycompany.report.MeasureFact;
+import com.mycompany.report.MUEvent;
+import java.util.Date;
+
+global com.mycompany.report.MeasureFact measureFact
+
+rule "MURule CCD received within time frame"
+	dialect "java"
+	when
+		m: MUEvent( eventType == "CCDReceived" &&
+		    encounterDate.getTime() >= (eventDate.getTime() - 2 * 24 * 60 * 60 * 1000)	 )
+	then
+    measureFact.setMeasureType("VDT1");
+	    measureFact.setMeasuremet(true);
+	    measureFact.setUserId(m.getUserId());
+	    measureFact.setEncounterId(m.getEncounterId());
+	    measureFact.setFacilityId(m.getFacilityId());
+end
+
+rule "MURule CCD received after time frame"
+	dialect "java"
+	when
+		m: MUEvent( eventType == "CCDReceived" &&
+		    encounterDate.getTime() < (eventDate.getTime() - 2 * 24 * 60 * 60 * 1000)	 )
+	then
+	    measureFact.setMeasureType("VDT1");
+	    measureFact.setMeasuremet(false);
+	    measureFact.setUserId(m.getUserId());
+        measureFact.setEncounterId(m.getEncounterId());
+        measureFact.setFacilityId(m.getFacilityId());
+end
